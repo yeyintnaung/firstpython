@@ -963,8 +963,10 @@
         </div>
     </div>
 </div>
-
 <!-- Page -->
+<div id="app">
+    [[message]]
+
 
 <div class="page">
     <div class="page-header">
@@ -994,11 +996,11 @@
                     <tr>
                         <th>id</th>
                         <th>Name</th>
-                        <th>Start</th>
-                        <th>Status</th>
+                        <th>Arrive Time</th>
+                        <th>Leave Time</th>
                         <th>Start</th>
                         <th>End</th>
-                        <th>OT</th>
+                        <th>Confirm</th>
 
                     </tr>
                     </thead>
@@ -1011,7 +1013,7 @@
                         <th>Status</th>
                         <th>Start</th>
                         <th>End</th>
-                        <th>OT</th>
+                        <th>Confirm</th>
                     </tr>
                     </tfoot>
                     <tbody>
@@ -1021,18 +1023,18 @@
                     <tr>
 
                         <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-
-                        <td>{{user.att}}</td>
-
-
+                         <td>{{ user.username }}</td>
+                        <td>[[date]] [[time]]</td>
                         <td>26</td>
                         <td>2014/06/13</td>
                         <td>$635,852</td>
-                        <td>$635,852</td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-block btn-primary waves-effect waves-light waves-round" v-on:click="gotoatt(id={{user.id}})">Primary
+                            </button>
+                        </td>
                     </tr>
                     {% endfor %}
-
                     {% else %}
                     <tr>
                         <td></td>
@@ -1043,17 +1045,75 @@
                         <td></td>
                         <td></td>
                     </tr>
-
                     {% endif %}
                     </tbody>
                 </table>
             </div>
         </div>
         <!-- End Panel Table Tools -->
-
-
+    </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0-beta.1/axios.js"></script>
+
+
+<script>
+
+var app = new Vue({
+delimiters: ['[[', ']]'],
+el: '#app',
+data: {
+id:'',
+time: '',
+date: '',
+timestamp:'',
+alltime:"",
+title:'yankee',
+message: 'Hello Vue!'
+},
+methods:{
+  gotoatt:function(id){
+      const self=this;
+     return axios({method: 'post',
+                    url: "http://"+window.location.host+"/first/attended/add",
+                    data: {
+                        'user_id':id,
+                        'timestamp':self.timestamp
+                    }
+                  }).then(function (response) {
+                 console.log(response)
+                }).catch(error => console.log(error));
+    }  
+},
+
+})
+var week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+var timerID = setInterval(updateTime, 1000);
+function updateTime() {
+    var cd = new Date();
+    app.time = zeroPadding(cd.getHours(), 2) + ':' + zeroPadding(cd.getMinutes(), 2) + ':' + zeroPadding(cd.getSeconds(), 2);
+    app.date = zeroPadding(cd.getFullYear(), 4) + '-' + zeroPadding(cd.getMonth()+1, 2) + '-' + zeroPadding(cd.getDate(), 2) + ' ' + week[cd.getDay()];
+    app.timestamp=cd.getTime();
+    console.log(app.timestamp)
+};
+function zeroPadding(num, digit) {
+    var zero = '';
+    for(var i = 0; i < digit; i++) {
+        zero += '0';
+    }
+    return (zero + num).slice(-digit);
+}
+app.updateTime()
+
+
+
+
+
+
+
+
+</script>
 
 <!-- End Page -->
 

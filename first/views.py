@@ -4,9 +4,12 @@ from django.template import loader
 from first.models import Attended
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+
 import time
 
 
+# this is django auth middleware
 # Create your views here.
 def index(request):
     template = loader.get_template('first/all/index/index.html')
@@ -14,6 +17,7 @@ def index(request):
     return HttpResponse(template.render())
 
 
+@login_required(login_url='/auth/login')
 def attended(request):
     template = loader.get_template('first/all/index/attended.html')
     # render function is html code extract
@@ -28,6 +32,7 @@ def attended(request):
     return HttpResponse(template.render({'users': users, 'data_att': data_att}))
 
 
+@login_required(login_url='/auth/login')
 def add(request):
     # ts = json.loads(request.body).get('timestamp')
     # userid = json.loads(request.body).get('user_id')
@@ -37,4 +42,3 @@ def add(request):
     a = Attended.objects.create(start=timestamp, end=timestamp, status='fff')
     a.save()
     return JsonResponse({'time': timestamp})
-

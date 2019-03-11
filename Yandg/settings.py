@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
 ]
 
 STATIC_URL = '/static/'
@@ -83,6 +84,11 @@ DATABASES = {
         'HOST': 'localhost',
     }
 }
+TEMPLATE_CONTEXT_PROCESSORS = (
+  # ...
+  'django.core.context_processors.request',
+  # ...
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
